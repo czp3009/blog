@@ -1,0 +1,16 @@
+<% if (config.comments.gitment){ %>
+    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+    <script>
+        const gitment = new Gitment({
+            id: '<%= page.title.replace(/[^\w\s]/gi, '').substring(0, 49) %>',
+            owner: '<%= config.comments.gitment.owner %>',
+            repo: '<%= config.comments.gitment.repo %>',
+            oauth: {
+                client_id: '<%= config.comments.gitment.clientId %>',
+                client_secret: '<%= config.comments.gitment.clientSecret %>'
+            }
+        });
+        gitment.render(document.getElementById('gitment-comments'));
+    </script>
+<% } %>

@@ -1,0 +1,31 @@
+# Header
+navbar_brand: false
+menu:
+  首页: index.html
+  留言板: /留言板
+rss: /atom.xml
+
+# Content
+excerpt_link: Read More
+fancybox: false
+
+# Sidebar
+widgets:
+- about         # See also: `about_content`
+- category
+- tag
+- recent_posts
+about_widget_content: >
+  <p>小伙伴们欢呼雀跃!</p>
+
+# widget behavior
+archive_type: 'monthly'
+show_count: true
+
+# Miscellaneous
+google_analytics: UA-90514703-2
+favicon:
+twitter_id:
+google_plus:
+fb_admins:
+fb_app_id:
