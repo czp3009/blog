@@ -6,3 +6,5 @@ node_modules/
 public/
 .deploy*/
 .idea
+hook_config.php
+latest_update.log
