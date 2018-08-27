@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 本站已更换为 Hexo
+title: 本站已更换为Hexo
 date: 2018-08-21 20:04:38
 category: 通知
 ---

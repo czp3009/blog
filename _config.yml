@@ -83,8 +83,8 @@ deploy:
 # Comments.
 comments:
   gitment:
-    clientId: 1808dbefdea3c185dd3b
-    clientSecret: 557be2aa0aa72bdffe0f22c683b7516166b0be28
+    clientId: 1420938fe02dceef581d
+    clientSecret: 9a3fc71b05e9358f5ea58cef6023b964f29ded12
     owner: czp3009
     repo: blog
 
