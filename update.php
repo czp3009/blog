@@ -30,7 +30,7 @@ if (!in_array($algo, hash_algos(), TRUE)) {
     response(500, "Hash algorithm '$algo' is not supported.");
 }
 $raw = file_get_contents('php://input');
-if ($hash !== hash_hmac($algo, $raw, $webhookSecret)) {
+if ($hash !== hash_hmac($algo, $raw, $hookSecret)) {
     forbidden();
 }
 
