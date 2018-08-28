@@ -48,6 +48,6 @@ switch ($_SERVER['HTTP_X_GITHUB_EVENT'] ?? null) {
 }
 
 //pull
-exec("nohup sh -c 'git pull && yarn install && hexo clean && hexo generate' > latest_update.log 2>&1 &");
+exec("nohup sh -c 'git fetch origin master && git reset --hard FETCH_HEAD && yarn install && hexo clean && hexo generate' > latest_update.log 2>&1 &");
 die('ok');
 ?>
