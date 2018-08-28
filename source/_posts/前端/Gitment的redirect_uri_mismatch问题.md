@@ -3,7 +3,7 @@ layout: post
 title: Gitment的redirect_uri_mismatch问题
 date: 2018-08-28 19:25:15
 category: 前端
-tag: gitment, github
+tag: [gitment, github]
 ---
 
 很多人选择使用 Gitment 作为评论系统, 由于 Gitment 只需要前端引入, 因此使用非常简单.
