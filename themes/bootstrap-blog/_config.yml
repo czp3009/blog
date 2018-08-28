@@ -2,7 +2,7 @@
 navbar_brand: false
 menu:
   首页: index.html
-  留言板: /留言板
+  留言板: 留言板/
 rss: /atom.xml
 
 # Content
