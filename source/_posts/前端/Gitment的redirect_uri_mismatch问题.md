@@ -6,7 +6,6 @@ category: 前端
 tag: gitment, github
 ---
 
-# Gitment的redirect_uri_mismatch问题
 很多人选择使用 Gitment 作为评论系统, 由于 Gitment 只需要前端引入, 因此使用非常简单.
 
 如果你需要的是在 Hexo 使用 Gitment 的教程, 可以看这篇文章 http://www.codeblocq.com/2018/05/Setup-gitment-on-your-Hexo-blog/
@@ -22,6 +21,7 @@ tag: gitment, github
 
 为了方便观看, 进行了折行处理.
 
+# Callback URL 设置错误
 我们可以看到其中有一个关键词 'redirect_uri_mismatch', 之后去 Google 搜索, 会有一大群人跟你说, 是你的 OAuth Apps 设置里的 Callback URL 设置错了, 这个设置的值应该与你的博客地址一模一样. 比如博客地址是 https://www.hiczp.com, 那么这个值也必须是这个.
 
 把这个值写错的人大多数把博客托管在 github.io, 但是自己又用其他域名做了 CNAME 的.
@@ -32,6 +32,7 @@ Github 需要这个 Callback URL 的作用是确认登陆前那个页面的域�
 
 比如站点实际在 czp3009.github.io, 但是我用 www.hiczp.com(https) 做了 CNAME, 并且我的用户都是用后者访问的, 那么 Callback URL 就得填 https://www.hiczp.com.
 
+# 文章名包含空格
 然而事情并不是这么简单, 很多遇到这个问题的人, 并非是由于这个低级错误.
 
 如果确定了 Callback URL 的设置确实是对的, 那么剩下的可能性只有一种: 文章名含有空格.
@@ -42,6 +43,5 @@ Github 需要这个 Callback URL 的作用是确认登陆前那个页面的域�
 
 所以解决方案也非常简单, 那就是不要在文章名使用空格.
 
-ps:
-
-还有一些人会遇到更加奇怪的情况, 登陆完了之后, 跳转回来, 结果是一个 404 页面, 这种情况是因为文章名里面有全角符号, Github 跳转回来的时候会自动变成半角符号, 于是导致 404.
+# 文章名含有全角符号
+还有一些人会遇到更加奇怪的情况, 登陆是正常的, 登陆完了之后跳转回来, 结果是一个 404 页面(在自己的站点上), 这种情况是因为文章名里面有全角符号, Github 跳转回来的时候会自动变成半角符号, 于是导致 404.
