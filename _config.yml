@@ -90,3 +90,6 @@ comments:
 
 # hexo-all-minifier
 all_minifier: true
+
+# excerpt
+excerpt_depth: 5

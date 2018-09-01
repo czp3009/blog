@@ -1789,6 +1789,13 @@ hexo-cli@^1.1.0:
     resolve "^1.5.0"
     tildify "^1.2.0"
 
+hexo-excerpt@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/hexo-excerpt/-/hexo-excerpt-1.1.2.tgz#9168158b4baf69787e3708b3200db00f32b656d6"
+  dependencies:
+    domutils "^1.5.1"
+    htmlparser2 "^3.9.0"
+
 hexo-front-matter@^0.2.2:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/hexo-front-matter/-/hexo-front-matter-0.2.3.tgz#c7ca8ef420ea36bd85e8408a2e8c9bf49efa605e"
@@ -1967,7 +1974,7 @@ html-minifier@^3.4.1:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
-htmlparser2@^3.9.1:
+htmlparser2@^3.9.0, htmlparser2@^3.9.1:
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.9.2.tgz#1bdf87acca0f3f9e53fa4fcceb0f4b4cbb00b338"
   dependencies:
