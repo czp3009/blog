@@ -24,7 +24,7 @@ show_count: true
 
 # Miscellaneous
 google_analytics: UA-90514703-2
-favicon:
+favicon: /favicon.ico
 twitter_id:
 google_plus:
 fb_admins:
