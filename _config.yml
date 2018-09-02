@@ -92,4 +92,7 @@ comments:
 all_minifier: true
 
 # excerpt
-excerpt_depth: 5
+excerpt:
+  depth: 5
+  excerpt_excludes: []
+  more_excludes: []
