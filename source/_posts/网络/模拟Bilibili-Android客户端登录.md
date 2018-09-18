@@ -45,22 +45,22 @@ tag: [bilibili, android]
     Connection: Keep-Alive
     Accept-Encoding: gzip
 
-有三个 Params 我们是不清楚的, 分别是 access_key, appkey, sign
+有三个 Params 我们是不清楚的, 分别是 `access_key`, `appkey`, `sign`
 
-我们重复请求这一 API, 我们发现, appkey(1d8b6e7d45233436) 和 access_key 每次都是一样的.
+我们重复请求这一 API, 我们发现, `appkey`(1d8b6e7d45233436) 和 `access_key` 每次都是一样的.
 
-我们退出客户端的登录状态后再次请求, 我们发现请求中没有了 access_key. 我们再次登录, 此时 access_key 与上一次登录不一样了. 这说明 access_key 就是 token.
+我们退出客户端的登录状态后再次请求, 我们发现请求中没有了 `access_key`. 我们再次登录, 此时 `access_key` 与上一次登录不一样了. 这说明 `access_key` 就是 token.
 
 也就是说这是一个典型的 Token 登陆场景, 我们只要从身份服务器获得一个 Token, 就可以用它访问所有 API.
 
-而 sign 势必是通过一种校验算法得到的校验码, 用于防止伪造请求.
+而 `sign` 势必是通过一种校验算法得到的校验码, 用于防止伪造请求.
 
-起初, 我研究了很久也没有猜到 sign 的生成算法, 直到有一天我看到了这篇文章 http://www.jianshu.com/p/5087346d8e93
+起初, 我研究了很久也没有猜到 `sign` 的生成算法, 直到有一天我看到了这篇文章 http://www.jianshu.com/p/5087346d8e93
 
 出于安全性问题, appSecret 保存在 so 文件中, 通过 jni 调用. 关于反编译 B 站客户端中的 so 文件来得到 appSecret 的文章我之前看过, 但是现在一时找不到了, 如果那篇文章有人见过, 麻烦补个链接.
 
 ## sign 生成算法
-这里简要描述一下 sign 的生成过程.
+这里简要描述一下 `sign` 的生成过程.
 
 首先将 Params 的 Name-Value 对按 Name 的字典序排列, 变为如下字符串
 
@@ -72,7 +72,7 @@ tag: [bilibili, android]
 
 最后对以上字符串进行 md5 加密, 就得到了 sign.
 
-得到 sign 之后, 将 sign 作为请求的最后一个 Param.
+得到 `sign` 之后, 将 `sign` 作为请求的最后一个 Param.
 
 整条 Params 差不多类似这样
 
@@ -107,17 +107,17 @@ tag: [bilibili, android]
     password
     sign
 
-appkey 我们之前已经知道了, 而 username 是明文传输的, 关键就是这个 password.
+`appkey` 我们之前已经知道了, 而 `username` 是明文传输的, 关键就是这个 `password`.
 
-password 是用密文传输的.
+`password` 是用密文传输的.
 
-password 的密文, 乍一看十分眼熟, 十分类似 Bilibili Web 版登陆时传输的密文 password.
+`password` 的密文, 乍一看十分眼熟, 十分类似 Bilibili Web 版登陆时传输的密文 `password`.
 
-后来我们确信, Android 客户端的 password 加密算法与 Web 版是一样的. 并且很巧的是, Web 版的 password 加密算法我之前已经研究过了.
+后来我们确信, Android 客户端的 `password` 加密算法与 Web 版是一样的. 并且很巧的是, Web 版的 `password` 加密算法我之前已经研究过了.
 
-在 Web 版中, 前端 js 会访问 GET https://passport.bilibili.com/login?act=getkey 来获得一个 hash 值和 B 站的 RSA 公钥.
+在 Web 版中, 前端 js 会访问 GET https://passport.bilibili.com/login?act=getkey 来获得一个 `hash` 值和 B 站的 RSA 公钥.
 
-我们翻看 Android 客户端前后的请求记录, 发现 Android 访问 POST https://passport.bilibili.com/api/oauth2/getKey 来获得 hash 和 RSA 公钥.
+我们翻看 Android 客户端前后的请求记录, 发现 Android 访问 POST https://passport.bilibili.com/api/oauth2/getKey 来获得 `hash` 和 RSA 公钥.
 
 请求的返回值是这样的
 
@@ -132,7 +132,7 @@ password 的密文, 乍一看十分眼熟, 十分类似 Bilibili Web 版登陆�
 
 密码加密算法大致是这样的:
 
-将 hash 值与明文密码做字符串拼接, 
+将 `hash` 值与明文密码做字符串拼接, 
 
 将得到的结果字符串, 先 BASE64 解密得到 byte[].
 
@@ -151,13 +151,13 @@ Java 实现详见 https://github.com/czp3009/bilibili-api/blob/master/src/main/j
 
 (现在 B 站有了新的登陆接口, 旧的接口现在百分百要求验证码, 这张图是现在的截图, 已经处理了验证码问题. 有关验证码问题的描述详见 https://github.com/czp3009/bilibili-api#%E9%AA%8C%E8%AF%81%E7%A0%81%E9%97%AE%E9%A2%98)
 
-服务器提示 can't decrypt rsa password~
+服务器提示 `can't decrypt rsa password~`
 
 我们首先想到的是, 是不是我们的 sign 算法是错的, 于是我们改动 sign 的值, 使其变为错误的.
 
 {% asset_img '2018-09-07 02-37-39屏幕截图.png' 'API sign invalid' %}
 
-这时服务器提示 API sign invalid.
+这时服务器提示 `API sign invalid`
 
 这说明, 我们的 sign 算法一定是正确的, 否则请求将在 password 密文解密前就被服务器返回.
 
@@ -171,7 +171,7 @@ Java 实现详见 https://github.com/czp3009/bilibili-api/blob/master/src/main/j
 
 {% asset_img '2018-09-07 02-53-13屏幕截图.png' 'cant decrypt rsa password~' %}
 
-此时依然显示 can't decrypt rsa password~
+此时依然显示 `can't decrypt rsa password~`
 
 现在我们可以推测服务端的代码逻辑了, 大概是这样的
 
@@ -191,7 +191,7 @@ Java 实现详见 https://github.com/czp3009/bilibili-api/blob/master/src/main/j
 
 所以我们无法登陆, 一定是由于我们的密文密码被解密后, 与明文密码不一致.
 
-那么, 是不是密码加密算法错了? 也不是. 因为如果我们对真实的 Android 客户端发出的请求进行重放, 也会收到 can't decrypt rsa password~
+那么, 是不是密码加密算法错了? 也不是. 因为如果我们对真实的 Android 客户端发出的请求进行重放, 也会收到 `can't decrypt rsa password~`
 
 我们在 APP 上进行多次登陆尝试, 试着比对每一次的参数不同, 我们发现, 每一次的 password 密文, 都是不一样的. 这时我们才猛然意识到, 最开始获取的那个 hash 值, 是会变化的.
 
@@ -224,9 +224,9 @@ B 站正是使用这段会变化的 hash 拼接到明文密码前面, 来保证�
       "ts": 1536262532
     }
 
-其中 refresh_token 是 OAuth2 中的 refreshToken, 刷新 token 时使用.
+其中 `refresh_token` 是 OAuth2 中的 refreshToken, 刷新 token 时使用.
 
-而 access_token, 就是我们梦寐以求的 access_key.
+而 `access_token`, 就是我们梦寐以求的 access_key.
 
 ## 调用 API
 有了 token, 我们现在可以调用各种 API 了, 比如说获取自己所关注的主播列表
