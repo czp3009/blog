@@ -362,21 +362,20 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 还记得我们截获的数据包中的 `inf_enc` 的值么, 没错, 就是这个. 我们终于破解了 `inf_enc` 的生成算法.
 
-我们整理一下这个算法, 差不多是这样的
+我们整理一下这个算法, 差不多是这样的(32 位 MD5)
 
-    "token=4faa8662c59590c6f43ae9fe5b002b42&_time=${System.currentTimeMillis()}&DESKey=Z(AfY@XS"
-            .toByteArray()
-            .let {
-                MessageDigest.getInstance("MD5").apply {
-                    update(it)
-                }.digest()
-            }.joinToString(separator = "") {
-                var value = it.toInt()
-                if (value in 0 until 16) return@joinToString "0${value.toString(16)}"
-                if (value in Byte.MIN_VALUE until 0) value += 256
-                value.toString(16)
-            }
-            .run(::println)
+    fun main(args: Array<String>) {
+        "token=4faa8662c59590c6f43ae9fe5b002b42&_time=${System.currentTimeMillis()}&DESKey=Z(AfY@XS"
+                .md5()
+                .run(::println)
+    }
+    
+    private fun String.md5() =
+            MessageDigest.getInstance("MD5")
+                    .digest(toByteArray())
+                    .joinToString(separator = "") {
+                        String.format("%02x", it)
+                    }
 
 最后打印出来的就是 `inf_enc`.
 
@@ -385,13 +384,19 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 {% asset_img '2018-09-22 00-02-02屏幕截图.png' loginregister %}
 
-接着我们得到了一大堆的 `Cookie`, 这些就是我们的凭证.
+接着我们得到了一大堆的 `Cookie`, 这些就是我们的凭证(有效期为一个月).
 
 我们观察到, APP 在登陆后会立即访问一个地址来获取个人信息, 即 UserInfo
 
 {% asset_img '2018-09-22 00-13-24屏幕截图.png' userLogin4Uname %}
 
 很好, 我们成功的获得了用户信息.
+
+(这一操作同时也会增加不少 `Cookie`, 所以这是必要操作)
+
+(https://passport2.chaoxing.com/api/cookie 也可以获得所有缺失的 `Cookie`)
+
+(`Cookie` 有很多个, 一些 `Cookie` 标识用户是哪个学校的, 一些 `Cookie` 标识用户可以使用哪些 API, 相当繁杂)
 
 ## 调用接口
 既然我们已经成功登陆了, 现在我们来调用一些需要登陆才能调用的接口.
@@ -405,4 +410,152 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 ## 模拟看网课
 模拟登陆只是第一步, 我们的征程是模拟看网课.
 
-关于这一点明天再讲.
+为了模拟看网课, 我们得先搞清楚, 在正常的看网课操作下, 客户端会发送什么东西到服务端.
+
+除了加载那些 HTML, CSS, JS(视频播放器是一个 WebView), 以及 字幕, 副标题 之类的东西. 还会访问一个很特别的 API
+
+    GET /richvideo/initdatawithviewer?&start=0&mid=5732900763131425521382549&view=json HTTP/1.1
+    Host: mooc1-api.chaoxing.com
+
+返回的内容是这样的
+
+    [
+    	{
+    		"datas": [
+    			{
+    				"memberinfo": "67b120e66d29a7429c6b10df36fba5261ef8397f3648a99c",
+    				"resourceId": 447037,
+    				"answered": false,
+    				"errorReportUrl": "http://mooc1-api.chaoxing.com/question/addquestionerror",
+    				"options": [
+    					{
+    						"isRight": false,
+    						"name": "A",
+    						"description": "互帮互助"
+    					},
+    					{
+    						"isRight": false,
+    						"name": "B",
+    						"description": "全力救助有困难学生"
+    					},
+    					{
+    						"isRight": true,
+    						"name": "C",
+    						"description": "尊重困难学生的人格"
+    					},
+    					{
+    						"isRight": false,
+    						"name": "D",
+    						"description": "看不起困难学生"
+    					}
+    				],
+    				"description": "马加爵事件告诉了我们一个在人与人相处过程中的什么道理？",
+    				"validationUrl": "/richvideo/qv",
+    				"startTime": 759,
+    				"endTime": 0,
+    				"questionType": "单选题"
+    			}
+    		],
+    		"style": "QUIZ"
+    	}
+    ]
+
+视频中间 "插播" 的那些提问, 不是远端判题的, 而是本地判题的. 这些题目的答案, 在视频一开始, 就已经知道了.
+
+所以我们实际上并不需要处理视频中间的这些提问.
+
+在视频播放的过程中, 我们会看到 APP 在不停的发送一些数据, 仔细一看, 这些数据每分钟都会发送一次.
+
+首先是这么一个 API
+
+    GET /multimedia/log/78c415169c17d665ded62ee3c342707a?otherInfo=nodeId_105091689&playingTime=565&duration=819&akid=null&jobid=1425521382863&clipTime=0_819&clazzId=2369933&objectId=54f7b40d53706e35b9f25898&userid=58973666&isdrag=0&enc=7abeb4fdb90e10b7bea7e64d334dc5c8&dtype=Video&view=json HTTP/1.1
+    Host: mooc1-api.chaoxing.com
+
+Params 有这么多
+
+| key | value |
+| :--- | :--- |
+| otherInfo | nodeId_105091689 |
+| playingTime | 565 |
+| duration | 819 |
+| akid | null |
+| jobid | 1425521382863 |
+| clipTime | 0_819 |
+| clazzId | 2369933 |
+| objectId | 54f7b40d53706e35b9f25898 |
+| userid | 58973666 |
+| isdrag | 0 |
+| enc | 7abeb4fdb90e10b7bea7e64d334dc5c8 |
+| dtype | Video |
+| view | json |
+
+这个其实就是心跳包, 我们可以观察到, 每一个心跳包里面的 `playingTime` 参数都会递增 60.
+
+所以 `playerTime` 就是当前播放器时间.
+
+而 `duration` 就是视频的总时长.
+
+当 `playingTime` 与 `duration` 差异很大时, 服务器将返回这样的数据
+
+    {
+        "isPassed": false
+    }
+
+而这两个值相差比较近时(具体要多近不明确), 返回内容中的 `isPassed` 将为 true.
+
+也就是说, 我们在看视频的过程中, 会一直向服务器发送这个数据, 服务器正是通过判断实际提交的时间间隔与提交的 `playerTime` 的间隔是否差异过大来判断有没有作弊的.
+
+这也是为什么很多什么直接拖动学习通视频进度条的工具直接让使用者被判定为作弊, 从而失去了学分的原因.
+
+心跳包意味着挂机不可避免, 即使并非是真人在挂机.
+
+(心跳包在 `playingTime` 为 0 时开始发送, 在视频结束时会额外发送一次)
+
+心跳包中的 `enc` 每次都会变化, 这个参数也是一种签名算法, 不过比较复杂, 它的生成算法是这样的
+
+    "[$clazzId][$userid][$jobid][$objectId][${playingTime * 1000}][d_yHJ!\$pdA~5][${duration * 1000}][$clipTime]"
+            .md5()
+            .run(::println)
+
+除了这个心跳包是一分钟发送一次的, 还有一个请求也是一分钟发一次的.
+
+    GET /api/monitor-version?uid=58973111&version=1536923631314&view=json HTTP/1.1
+    Host: passport2-api.chaoxing.com
+
+这个请求每一次发送时的参数都是一模一样的, 而且服务端返回内容也是一模一样的, 都为
+
+    {
+        "status": true
+    }
+
+我们注意到, 这个请求不是发给 api 站的, 而是发给 passport 站的. 那么这意味着, 这个数据包与账户本身有关系.
+
+超星网课实际上还有一个常见的作弊查处理由, 多 IP 同时登陆.
+
+所以这个请求, 实际上是为了让超星服务端判断用户有没有在多 IP 同时看网课, 这会让一部分用淘宝人工代挂的用户翻车.
+
+所以事情变得很危险, 这个请求只能在一个 IP 上被发送.
+
+这个请求中的 `version` 是什么呢.
+
+打开视频的那一刹那, 会有这么一个请求
+
+    GET /api/mobile-version?uid=58973111&view=json HTTP/1.1
+    Host: passport2-api.chaoxing.com
+
+服务器将返回
+
+    {
+        "version": 1536923631314,
+        "status": true
+    }
+
+这个就是 `version` 的来源.
+
+现在我们已经知道了这两种数据包的具体情况, 我们只要每隔一分钟发送一遍他们, 我们就可以让服务器认为我们真的在看网课.
+
+而单元测验只是简单的 RestFul API, 题库可以在 Google 上搜索到, 整理之后导入数据库, 就可以实现自动答题了.
+
+你懂我意思吧.
+
+自动挂网课脚本的坑我会开的, 我一定会开的, 你说开, 我就开, 我马上开, 我开到爆炸.
