@@ -13,11 +13,11 @@ tag: [bilibili, android]
 
 接下去, 我们要对 APP 进行 http/https 截包, 通常对 Android 设备的截包的方案是设置系统代理到 PC, 然后在 PC 上对 nat 中的地址进行截包.
 
-这种方案其实很麻烦, 尤其是当使用虚拟机运行 Android 时. 如果数据量不是很大, 我们可以选择使用提供截包功能的 Android 程序来进行截包, 例如 Packet Capture 之类的应用.
+这种方案其实很麻烦, 尤其是当使用虚拟机运行 Android 时. 如果数据量不是很大, 我们可以选择使用提供截包功能的 Android 程序来进行截包, 例如 `Packet Capture` 之类的应用.
 
 现在 B 站大部分 API 都已经替换为 https, 而 https 截包需要安装截包程序提供的 SSL 证书, 从而实现 https 的 MITM.
 
-但是我们很快会发现, 使用截包程序(无论是手机上运行的 Packet Capture 还是 PC 上运行的 Fiddler 等程序)去截取 Bilibili 客户端的数据包, 会导致 APP 提示诸如 "电波无法到达呦", "加载失败了", "Trust anchor for certification path not found" 等字样.
+但是我们很快会发现, 使用截包程序(无论是手机上运行的 Packet Capture 还是 PC 上运行的 Fiddler 等程序)去截取 Bilibili 客户端的数据包, 会导致 APP 提示诸如 `电波无法到达呦`, `加载失败了`, `Trust anchor for certification path not found` 等字样.
 
 如下图所示
 
