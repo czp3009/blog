@@ -104,80 +104,86 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 在类 `com.chaoxing.mobile.account.d`(已混淆) 中我们找到了一个 ClickListener
 
-    private OnClickListener q = new OnClickListener() {
-        public void onClick(View view) {
-            if (!CommonUtils.isFastClick()) {
-                int id = view.getId();
-                if (id == R.id.tv_left) {
-                    d.this.getActivity().onBackPressed();
-                } else if (id == R.id.tv_right) {
-                    d.this.d();
-                } else if (id == R.id.iv_clear_account) {
-                    d.this.e.setText("");
-                    d.this.c();
-                    d.this.e.requestFocus();
-                    d.this.showSoftInput(d.this.e);
-                } else if (id == R.id.tv_forget_password) {
-                    d.this.f();
-                } else if (id == R.id.btn_login) {
-                    d.this.l();
-                } else if (id == R.id.tv_sign_up) {
-                    d.this.e();
-                } else if (id == R.id.tv_login_by_phone) {
-                    d.this.g();
-                } else if (id == R.id.tv_login_by) {
-                    d.this.i();
-                }
+```java
+private OnClickListener q = new OnClickListener() {
+    public void onClick(View view) {
+        if (!CommonUtils.isFastClick()) {
+            int id = view.getId();
+            if (id == R.id.tv_left) {
+                d.this.getActivity().onBackPressed();
+            } else if (id == R.id.tv_right) {
+                d.this.d();
+            } else if (id == R.id.iv_clear_account) {
+                d.this.e.setText("");
+                d.this.c();
+                d.this.e.requestFocus();
+                d.this.showSoftInput(d.this.e);
+            } else if (id == R.id.tv_forget_password) {
+                d.this.f();
+            } else if (id == R.id.btn_login) {
+                d.this.l();
+            } else if (id == R.id.tv_sign_up) {
+                d.this.e();
+            } else if (id == R.id.tv_login_by_phone) {
+                d.this.g();
+            } else if (id == R.id.tv_login_by) {
+                d.this.i();
             }
         }
-    };
+    }
+};
+```
 
 从布局 XML 中确认了 `btn_login` 就是那个登录按钮.
 
 我们来看一下这个 `l()` 方法
 
-    private boolean l() {
-        e.a();
-        String trim = this.e.getText().toString().trim();
-        String obj = this.g.getText().toString();
-        if (y.c(trim)) {
-            aa.a(getActivity(), "请输入你的登录账号");
-            this.e.requestFocus();
-            return false;
-        } else if (y.c(obj)) {
-            aa.a(getActivity(), "请输入你的密码");
-            this.g.requestFocus();
-            return false;
-        } else {
-            hideSoftInput();
-            a(trim, obj, 1);
-            return true;
-        }
+```java
+private boolean l() {
+    e.a();
+    String trim = this.e.getText().toString().trim();
+    String obj = this.g.getText().toString();
+    if (y.c(trim)) {
+        aa.a(getActivity(), "请输入你的登录账号");
+        this.e.requestFocus();
+        return false;
+    } else if (y.c(obj)) {
+        aa.a(getActivity(), "请输入你的密码");
+        this.g.requestFocus();
+        return false;
+    } else {
+        hideSoftInput();
+        a(trim, obj, 1);
+        return true;
     }
+}
+```
 
 就是那段文本所在的方法, 如果用户名和密码都被输入过的话, 将执行 `a(trim, obj, 1)`, 而这个方法是这样的
 
-    //login
-    private void a(String username, String password, int loginType) {   //loginType is always 1
-        getLoaderManager().destroyLoader(4097);
-        try {
-            MultipartEntity multipartEntity = new MultipartEntity();
-            multipartEntity.addPart("uname", new StringBody(username, Charset.forName("UTF-8")));
-            multipartEntity.addPart("code", new StringBody(password, Charset.forName("UTF-8")));
-            username = com.chaoxing.mobile.unit.a.b.l;  //loginType
-            StringBuilder stringBuilder = new StringBuilder();  //can be replaced with String
-            stringBuilder.append(loginType);
-            stringBuilder.append("");
-            multipartEntity.addPart(username, new StringBody(stringBuilder.toString(), Charset.forName("UTF-8")));
-            multipartEntity.addPart("roleSelect", new StringBody("true", Charset.forName("UTF-8")));    //hard coded
-            Bundle bundle = new Bundle();
-            bundle.putString("apiUrl", g.bq()); //g is passwordEditText(R.id.et_password)
-            getLoaderManager().initLoader(4097, bundle, new a(multipartEntity));
-            this.m.setVisibility(0);
-        } catch (Throwable e) {
-            com.google.a.a.a.a.a.a.b(e);    //Toast
-        }
+```java
+//login
+private void a(String username, String password, int loginType) {   //loginType is always 1
+    getLoaderManager().destroyLoader(4097);
+    try {
+        MultipartEntity multipartEntity = new MultipartEntity();
+        multipartEntity.addPart("uname", new StringBody(username, Charset.forName("UTF-8")));
+        multipartEntity.addPart("code", new StringBody(password, Charset.forName("UTF-8")));
+        username = com.chaoxing.mobile.unit.a.b.l;  //loginType
+        StringBuilder stringBuilder = new StringBuilder();  //can be replaced with String
+        stringBuilder.append(loginType);
+        stringBuilder.append("");
+        multipartEntity.addPart(username, new StringBody(stringBuilder.toString(), Charset.forName("UTF-8")));
+        multipartEntity.addPart("roleSelect", new StringBody("true", Charset.forName("UTF-8")));    //hard coded
+        Bundle bundle = new Bundle();
+        bundle.putString("apiUrl", g.bq()); //g is passwordEditText(R.id.et_password)
+        getLoaderManager().initLoader(4097, bundle, new a(multipartEntity));
+        this.m.setVisibility(0);
+    } catch (Throwable e) {
+        com.google.a.a.a.a.a.a.b(e);    //Toast
     }
+}
+```
 
 (为了方便阅读, 一些变量已经人工反混淆并添加了一些注释, 下同)
 
@@ -197,42 +203,44 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 我们看一下这个 `LoaderCallbacks` 在哪里, 然后惊人的发现, 还是他妈在这个类里面(内部类). 将 '把所有东西写在一个文件' 的作风表现到了极致.
 
-    /* compiled from: TbsSdkJava */
-    private class a implements LoaderCallbacks<Result> {
-        private MultipartEntity multipartEntity;
-        private String c;
+```java
+/* compiled from: TbsSdkJava */
+private class a implements LoaderCallbacks<Result> {
+    private MultipartEntity multipartEntity;
+    private String c;
 
-        public void onLoaderReset(Loader<Result> loader) {
+    public void onLoaderReset(Loader<Result> loader) {
+    }
+
+    a() {
+    }
+
+    a(MultipartEntity multipartEntity) {
+        this.multipartEntity = multipartEntity;
+    }
+
+    a(String str) {
+        this.c = str;
+    }
+
+    public Loader<Result> onCreateLoader(int i, Bundle bundle) {
+        if (i != 4097) {
+            return null;
         }
+        Loader dataLoaderWithLogin = new DataLoaderWithLogin(d.this.getContext(), bundle, this.multipartEntity);
+        dataLoaderWithLogin.setOnCompleteListener(d.this.u);
+        return dataLoaderWithLogin;
+    }
 
-        a() {
-        }
-
-        a(MultipartEntity multipartEntity) {
-            this.multipartEntity = multipartEntity;
-        }
-
-        a(String str) {
-            this.c = str;
-        }
-
-        public Loader<Result> onCreateLoader(int i, Bundle bundle) {
-            if (i != 4097) {
-                return null;
-            }
-            Loader dataLoaderWithLogin = new DataLoaderWithLogin(d.this.getContext(), bundle, this.multipartEntity);
-            dataLoaderWithLogin.setOnCompleteListener(d.this.u);
-            return dataLoaderWithLogin;
-        }
-
-        /* renamed from: a */
-        public void onLoadFinished(Loader<Result> loader, Result result) {
-            d.this.getLoaderManager().destroyLoader(loader.getId());
-            if (loader.getId() == 4097) {
-                d.this.a(result);
-            }
+    /* renamed from: a */
+    public void onLoadFinished(Loader<Result> loader, Result result) {
+        d.this.getLoaderManager().destroyLoader(loader.getId());
+        if (loader.getId() == 4097) {
+            d.this.a(result);
         }
     }
+}
+```
 
 我们之前的 `MultipartEntity` 被传入了一个叫做 `DataLoaderWithLogin` 的类里面. 这个类在包 `com.fanzhou.loader.support` 中, 似乎是什么工具类.
 
@@ -252,31 +260,33 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 我们直接搜索 `inf_enc`, 找到了类 `com.fanzhou.util.ac`
 
-    private static String b() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("token=");
-        stringBuilder.append("4faa8662c59590c6f43ae9fe5b002b42");
-        stringBuilder.append("&_time=");
-        stringBuilder.append(System.currentTimeMillis());
-        return stringBuilder.toString();
-    }
+```java
+private static String b() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("token=");
+    stringBuilder.append("4faa8662c59590c6f43ae9fe5b002b42");
+    stringBuilder.append("&_time=");
+    stringBuilder.append(System.currentTimeMillis());
+    return stringBuilder.toString();
+}
 
-    private static String f(String str) {
-        return d("Z(AfY@XS", str);
-    }
+private static String f(String str) {
+    return d("Z(AfY@XS", str);
+}
 
-    private static String d(String str, String str2) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str2);
-        stringBuilder.append("&DESKey=");
-        stringBuilder.append(str);
-        str = m.b(stringBuilder.toString());
-        stringBuilder = new StringBuilder();
-        stringBuilder.append(str2);
-        stringBuilder.append("&inf_enc=");
-        stringBuilder.append(str);
-        return stringBuilder.toString();
-    }
+private static String d(String str, String str2) {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(str2);
+    stringBuilder.append("&DESKey=");
+    stringBuilder.append(str);
+    str = m.b(stringBuilder.toString());
+    stringBuilder = new StringBuilder();
+    stringBuilder.append(str2);
+    stringBuilder.append("&inf_enc=");
+    stringBuilder.append(str);
+    return stringBuilder.toString();
+}
+```
 
 举头一看还能看到 `token` 和 `_time` 字眼.
 
@@ -288,30 +298,32 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 我们来看一下其中的 `m.b(String)` 是个什么方法. 它在另一个工具类 `com.fanzhou.util.m` 里面.
 
-    public static String b(String str) {
-        if (!(str == null || str.length() == 0)) {
-            try {
-                MessageDigest instance = MessageDigest.getInstance("MD5");
-                instance.update(str.getBytes());
-                byte[] digest = instance.digest();
-                StringBuffer stringBuffer = new StringBuffer("");
-                for (int i : digest) {  //i is nerver used
-                    int i2;
-                    if (i2 < 0) {
-                        i2 += 256;
-                    }
-                    if (i2 < 16) {
-                        stringBuffer.append("0");
-                    }
-                    stringBuffer.append(Integer.toHexString(i2));
+```java
+public static String b(String str) {
+    if (!(str == null || str.length() == 0)) {
+        try {
+            MessageDigest instance = MessageDigest.getInstance("MD5");
+            instance.update(str.getBytes());
+            byte[] digest = instance.digest();
+            StringBuffer stringBuffer = new StringBuffer("");
+            for (int i : digest) {  //i is nerver used
+                int i2;
+                if (i2 < 0) {
+                    i2 += 256;
                 }
-                return stringBuffer.toString();
-            } catch (Throwable e) {
-                a.b(e); //Toast
+                if (i2 < 16) {
+                    stringBuffer.append("0");
+                }
+                stringBuffer.append(Integer.toHexString(i2));
             }
+            return stringBuffer.toString();
+        } catch (Throwable e) {
+            a.b(e); //Toast
         }
-        return null;
     }
+    return null;
+}
+```
 
 这里我们看到, 它对传入的字符串进行了 `MD5` 加密, 然后对结果 byte[] 进行了一次遍历处理, 但是不知道为何, 反编译结果中的 i2 变量并没有被初始化.
 
@@ -333,16 +345,18 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 我们回过头来看一下那个循环的内容
 
-    for (int i : digest) {
-        int i2;
-        if (i2 < 0) {
-            i2 += 256;
-        }
-        if (i2 < 16) {
-            stringBuffer.append("0");
-        }
-        stringBuffer.append(Integer.toHexString(i2));
+```java
+for (int i : digest) {
+    int i2;
+    if (i2 < 0) {
+        i2 += 256;
     }
+    if (i2 < 16) {
+        stringBuffer.append("0");
+    }
+    stringBuffer.append(Integer.toHexString(i2));
+}
+```
 
 循环一开始判断了 `i2` 的值是不是小于 0, 如果是, 则加 256 后再将其十六进制值(两位)拼接到字符串最后.
 
@@ -364,18 +378,20 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 我们整理一下这个算法, 差不多是这样的(32 位 MD5)
 
-    fun main(args: Array<String>) {
-        "token=4faa8662c59590c6f43ae9fe5b002b42&_time=${System.currentTimeMillis()}&DESKey=Z(AfY@XS"
-                .md5()
-                .run(::println)
-    }
-    
-    private fun String.md5() =
-            MessageDigest.getInstance("MD5")
-                    .digest(toByteArray())
-                    .joinToString(separator = "") {
-                        String.format("%02x", it)
-                    }
+```kotlin
+fun main(args: Array<String>) {
+    "token=4faa8662c59590c6f43ae9fe5b002b42&_time=${System.currentTimeMillis()}&DESKey=Z(AfY@XS"
+            .md5()
+            .run(::println)
+}
+
+private fun String.md5() =
+        MessageDigest.getInstance("MD5")
+                .digest(toByteArray())
+                .joinToString(separator = "") {
+                    String.format("%02x", it)
+                }
+```
 
 最后打印出来的就是 `inf_enc`.
 
@@ -419,46 +435,48 @@ Params 有三个, `token`, `_time`, `inf_enc`.
 
 返回的内容是这样的
 
-    [
-    	{
-    		"datas": [
-    			{
-    				"memberinfo": "67b120e66d29a7429c6b10df36fba5261ef8397f3648a99c",
-    				"resourceId": 447037,
-    				"answered": false,
-    				"errorReportUrl": "http://mooc1-api.chaoxing.com/question/addquestionerror",
-    				"options": [
-    					{
-    						"isRight": false,
-    						"name": "A",
-    						"description": "互帮互助"
-    					},
-    					{
-    						"isRight": false,
-    						"name": "B",
-    						"description": "全力救助有困难学生"
-    					},
-    					{
-    						"isRight": true,
-    						"name": "C",
-    						"description": "尊重困难学生的人格"
-    					},
-    					{
-    						"isRight": false,
-    						"name": "D",
-    						"description": "看不起困难学生"
-    					}
-    				],
-    				"description": "马加爵事件告诉了我们一个在人与人相处过程中的什么道理？",
-    				"validationUrl": "/richvideo/qv",
-    				"startTime": 759,
-    				"endTime": 0,
-    				"questionType": "单选题"
-    			}
-    		],
-    		"style": "QUIZ"
-    	}
-    ]
+```json
+[
+    {
+        "datas": [
+            {
+                "memberinfo": "67b120e66d29a7429c6b10df36fba5261ef8397f3648a99c",
+                "resourceId": 447037,
+                "answered": false,
+                "errorReportUrl": "http://mooc1-api.chaoxing.com/question/addquestionerror",
+                "options": [
+                    {
+                        "isRight": false,
+                        "name": "A",
+                        "description": "互帮互助"
+                    },
+                    {
+                        "isRight": false,
+                        "name": "B",
+                        "description": "全力救助有困难学生"
+                    },
+                    {
+                        "isRight": true,
+                        "name": "C",
+                        "description": "尊重困难学生的人格"
+                    },
+                    {
+                        "isRight": false,
+                        "name": "D",
+                        "description": "看不起困难学生"
+                    }
+                ],
+                "description": "马加爵事件告诉了我们一个在人与人相处过程中的什么道理？",
+                "validationUrl": "/richvideo/qv",
+                "startTime": 759,
+                "endTime": 0,
+                "questionType": "单选题"
+            }
+        ],
+        "style": "QUIZ"
+    }
+]
+```
 
 视频中间 "插播" 的那些提问, 不是远端判题的, 而是本地判题的. 这些题目的答案, 在视频一开始, 就已经知道了.
 
@@ -497,9 +515,11 @@ Params 有这么多
 
 当 `playingTime` 与 `duration` 差异很大时, 服务器将返回这样的数据
 
-    {
-        "isPassed": false
-    }
+```json
+{
+    "isPassed": false
+}
+```
 
 而这两个值相差比较近时(具体要多近不明确), 返回内容中的 `isPassed` 将为 true.
 
@@ -513,9 +533,11 @@ Params 有这么多
 
 心跳包中的 `enc` 每次都会变化, 这个参数也是一种签名算法, 不过比较复杂, 它的生成算法是这样的
 
-    "[$clazzId][$userid][$jobid][$objectId][${playingTime * 1000}][d_yHJ!\$pdA~5][${duration * 1000}][$clipTime]"
-            .md5()
-            .run(::println)
+```kotlin
+"[$clazzId][$userid][$jobid][$objectId][${playingTime * 1000}][d_yHJ!\$pdA~5][${duration * 1000}][$clipTime]"
+        .md5()
+        .run(::println)
+```
 
 除了这个心跳包是一分钟发送一次的, 还有一个请求也是一分钟发一次的.
 
@@ -524,9 +546,11 @@ Params 有这么多
 
 这个请求每一次发送时的参数都是一模一样的, 而且服务端返回内容也是一模一样的, 都为
 
-    {
-        "status": true
-    }
+```json
+{
+    "status": true
+}
+```
 
 我们注意到, 这个请求不是发给 api 站的, 而是发给 passport 站的. 那么这意味着, 这个数据包与账户本身有关系.
 
@@ -545,10 +569,12 @@ Params 有这么多
 
 服务器将返回
 
-    {
-        "version": 1536923631314,
-        "status": true
-    }
+```json
+{
+    "version": 1536923631314,
+    "status": true
+}
+```
 
 这个就是 `version` 的来源.
 

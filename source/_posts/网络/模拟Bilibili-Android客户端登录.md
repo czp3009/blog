@@ -121,14 +121,16 @@ tag: [bilibili, android]
 
 请求的返回值是这样的
 
-    {
-    	"ts": 1536261900,
-    	"code": 0,
-    	"data": {
-    		"hash": "0e7d998fb519dc0c",
-    		"key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdScM09sZJqFPX7bvmB2y6i08J\nbHsa0v4THafPbJN9NoaZ9Djz1LmeLkVlmWx1DwgHVW+K7LVWT5FV3johacVRuV98\n37+RNntEK6SE82MPcl7fA++dmW2cLlAjsIIkrX+aIvvSGCuUfcWpWFy3YVDqhuHr\nNDjdNcaefJIQHMW+sQIDAQAB\n-----END PUBLIC KEY-----\n"
-    	}
+```json
+{
+    "ts": 1536261900,
+    "code": 0,
+    "data": {
+        "hash": "0e7d998fb519dc0c",
+        "key": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdScM09sZJqFPX7bvmB2y6i08J\nbHsa0v4THafPbJN9NoaZ9Djz1LmeLkVlmWx1DwgHVW+K7LVWT5FV3johacVRuV98\n37+RNntEK6SE82MPcl7fA++dmW2cLlAjsIIkrX+aIvvSGCuUfcWpWFy3YVDqhuHr\nNDjdNcaefJIQHMW+sQIDAQAB\n-----END PUBLIC KEY-----\n"
     }
+}
+```
 
 密码加密算法大致是这样的:
 
@@ -175,19 +177,21 @@ Java 实现详见 https://github.com/czp3009/bilibili-api/blob/master/src/main/j
 
 现在我们可以推测服务端的代码逻辑了, 大概是这样的
 
-    if(!checkSign(queryString, sign)) {
-        throw SignInvalidException()
-    }
-    
-    val userEntity = userRepository.findByUsername(username)?:throw UsernameOrPasswordIncorrectException(username)
-    
-    return try {
-        decryptPassword(cryptPassword)
-    } catch (e : Exception) {
-        throw CannotDecryptRSAPasswordException(e)
-    }.takeIf { it == userEntity.password }  //假设数据库存储的是明文密码
-    ?.ResponseEntity.ok().build()
-    ?:throw UsernameOrPasswordIncorrectException(username)
+```kotlin
+if(!checkSign(queryString, sign)) {
+    throw SignInvalidException()
+}
+
+val userEntity = userRepository.findByUsername(username)?:throw UsernameOrPasswordIncorrectException(username)
+
+return try {
+    decryptPassword(cryptPassword)
+} catch (e : Exception) {
+    throw CannotDecryptRSAPasswordException(e)
+}.takeIf { it == userEntity.password }  //假设数据库存储的是明文密码
+?.ResponseEntity.ok().build()
+?:throw UsernameOrPasswordIncorrectException(username)
+```
 
 所以我们无法登陆, 一定是由于我们的密文密码被解密后, 与明文密码不一致.
 
@@ -213,16 +217,18 @@ B 站正是使用这段会变化的 hash 拼接到明文密码前面, 来保证�
 
 登陆成功后, 服务器返回
 
-    {
-      "code": 0,
-      "data": {
-        "access_token": "3a1b3f690a111768fd2f26da06357243",
-        "refresh_token": "8f361851b9866f3877c303f0ef4ef067",
-        "mid": 20293030,
-        "expires_in": 2592000
-      },
-      "ts": 1536262532
-    }
+```json
+{
+  "code": 0,
+  "data": {
+    "access_token": "3a1b3f690a111768fd2f26da06357243",
+    "refresh_token": "8f361851b9866f3877c303f0ef4ef067",
+    "mid": 20293030,
+    "expires_in": 2592000
+  },
+  "ts": 1536262532
+}
+```
 
 其中 `refresh_token` 是 OAuth2 中的 refreshToken, 刷新 token 时使用.
 
