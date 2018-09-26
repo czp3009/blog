@@ -118,11 +118,11 @@
     display: inline-block;
 }
 
-.article-share-link {
-    cursor: pointer;
-    float: right;
-    margin-left: 20px;
-}
+/*.article-share-link {*/
+/*cursor: pointer;*/
+/*float: right;*/
+/*margin-left: 20px;*/
+/*}*/
 
 /* prev/next navigation between articles */
 #article-nav {
