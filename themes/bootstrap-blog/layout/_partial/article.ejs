@@ -32,15 +32,8 @@
         <% } %>
 
         <footer class="article-footer">
-            <!--<a data-url="<%- post.permalink %>" data-id="<%= post._id %>" class="article-share-link">-->
-            <!--<i class="fa fa-share"></i> Share-->
-            <!--</a>-->
             <%- partial('post/tag') %>
         </footer>
-
-        <% if(page.comments && theme.comments && theme.comments.gitment){ %>
-            <div id="gitment-comments"></div>
-        <% } %>
 
     </div>
     <% if (!index){ %>
@@ -48,8 +41,8 @@
     <% } %>
 </article>
 
-<% if (!index && post.comments && config.comments.gitment){ %>
+<% if (!index && post.comments && config.comments.gitalk.on){ %>
     <section id="comments">
-        <div id="gitment-comments"></div>
+        <div id="gitalk-container"></div>
     </section>
 <% } %>

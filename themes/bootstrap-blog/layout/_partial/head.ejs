@@ -46,8 +46,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
           integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
 
-    <% if (page.comments && config.comments.gitment){ %>
-        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    <% if (page.comments && config.comments.gitalk.on){ %>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <% } %>
 
     <%- css('css/styles') %>

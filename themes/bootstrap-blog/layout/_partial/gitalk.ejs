@@ -1,0 +1,15 @@
+<% if (config.comments.gitalk.on){ %>
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+            clientID: '<%= config.comments.gitalk.clientId %>',
+            clientSecret: '<%= config.comments.gitalk.clientSecret %>',
+            id: '<%= page.title.substring(0, 49) %>',
+            repo: '<%= config.comments.gitalk.repo %>',
+            owner: '<%= config.comments.gitalk.owner %>',
+            admin: '<%= config.comments.gitalk.owner %>',
+            distractionFreeMode: '<%= config.comments.gitalk.on %>'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+<% } %>

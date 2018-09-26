@@ -82,11 +82,12 @@ deploy:
 
 # Comments.
 comments:
-  gitment:
+  gitalk:
     clientId: 1420938fe02dceef581d
     clientSecret: 9a3fc71b05e9358f5ea58cef6023b964f29ded12
     owner: czp3009
     repo: blog
+    on: true
 
 # hexo-all-minifier
 all_minifier: true
