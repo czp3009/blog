@@ -105,3 +105,8 @@ excerpt:
   depth: 5
   excerpt_excludes: []
   more_excludes: []
+
+# image lazy-loading
+lazyload:
+  enable: true
+  onlypost: true
