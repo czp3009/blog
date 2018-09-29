@@ -325,3 +325,9 @@ code {
 #comments {
     margin-bottom: 50px;
 }
+
+/* image-link */
+.image-link img {
+    margin-left: auto;
+    margin-right: auto;
+}

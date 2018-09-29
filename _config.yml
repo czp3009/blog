@@ -110,3 +110,4 @@ excerpt:
 lazyload:
   enable: true
   onlypost: true
+  loadingImg: /images/comet-spinner.svg
