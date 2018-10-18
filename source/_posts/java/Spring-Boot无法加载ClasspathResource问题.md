@@ -40,7 +40,7 @@ myFile.file
 java.io.FileNotFoundException: class path resource [myFile.txt] cannot be resolved to absolute file path because it does not reside in the file system: jar:file:/app.jar!/BOOT-INF/classes!/myFile.txt
 ```
 
-在集成环境和生产环境上, 我们的程序是一个 `jar` 包而不是 `explode` 方式, 也就是说, 此时的 `Resource.getFile()` 将有不一样的行为.
+在集成环境和生产环境上, 我们的程序是一个 `jar` 包而不是 `exploded` 方式, 也就是说, 此时的 `Resource.getFile()` 将有不一样的行为.
 
 我们在 `IDEA` 调试的时候, 资源文件是存在于真实文件系统里的一个文件. 而在 `jar` 包中, 它不是一个真实文件系统的文件.
 
