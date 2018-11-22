@@ -84,7 +84,7 @@ open class SinglePageApplicationWebMvcConfiguration(
 
 注意, `spring.resources.static-locations` 并非是硬编码的, 而是在配置文件中可以修改的, 所以我们要从配置文件中得到它.
 
-该 `ResourceHandler` 将监听 `/**` 地址(注意, `RequestMappingHandlerMapping` 一定是先于最后一个 `SimpleUrlHandlerMapping` 被执行的, 所以访问 RestFul API 的请求不会进入 `ResourceHandler`), 当目标资源不存在时, 将返回 `index.html` 如果 `index.html` 也不存在, 将产生 404.
+该 `ResourceHandler` 将监听 `/**` 地址(注意, `RequestMappingHandlerMapping` 一定是先于最后一个 `SimpleUrlHandlerMapping` 被执行的, 所以访问 RestFul API 的请求不会进入 `ResourceHandler`), 当目标资源不存在时, 将返回 `index.html`, 如果 `index.html` 也不存在, 将产生 404.
 
 `addResourceLocations` 添加的资源位置, 会让 `Resolver` 在每个资源位置都被轮询一次, 所以不会因为用户额外添加了 `static-location` 而导致错误.
 
