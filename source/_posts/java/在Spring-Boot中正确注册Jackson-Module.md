@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 在Spring-Boot中正确注册Jackson-Module
-date: 2018-10-10=2 15:11:52
+date: 2018-10-10 15:11:52
 category: java
 tag: spring
 ---

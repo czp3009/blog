@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Spring-Boot中配置单页应用
-date: 2018-11-12 11:34:18
+date: 2018-11-22 11:34:18
 category: java
 tag: spring
 ---
