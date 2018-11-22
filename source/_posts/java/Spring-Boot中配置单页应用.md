@@ -14,9 +14,7 @@ tag: spring
 
 我们很容易想到让 Spring 找不到资源文件时抛出一个异常然后我们配置一个 `ControllerAdvice`, 于是我们搜到了这么一条配置
 
-```properties
-spring.mvc.throw-exception-if-no-handler-found=true
-```
+    spring.mvc.throw-exception-if-no-handler-found=true
 
 但是我们很快就发现, 实际上 `NoHandlerException` 永远不会被抛出.
 
