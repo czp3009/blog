@@ -3,7 +3,6 @@ layout: post
 title: Ubuntu增加最大文件打开数量限制
 date: 2018-10-22 17:49:35
 category: linux
-tag: linux
 ---
 
 环境: Ubuntu Desktop 18.04

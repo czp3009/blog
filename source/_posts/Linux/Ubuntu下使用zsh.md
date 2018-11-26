@@ -3,7 +3,7 @@ layout: post
 title: Ubuntu下使用zsh
 date: 2018-09-27 13:59:21
 category: linux
-tag: [linux, zsh]
+tag: zsh
 ---
 
 环境: Ubuntu 18.04 | zsh 5.4.2
