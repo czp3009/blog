@@ -134,15 +134,9 @@ tag: [bilibili, android]
 
 密码加密算法大致是这样的:
 
-将 `hash` 值与明文密码做字符串拼接, 
+将 `hash` 值与明文密码做字符串拼接, 即 "$hash+$password"
 
-将得到的结果字符串, 先 BASE64 解密得到 byte[].
-
-对以上 byte[] 用 RSA 公钥加密.
-
-再将结果 byte[] 进行 BASE64 加密得到 Ascii 字符串.
-
-Java 实现详见 https://github.com/czp3009/bilibili-api/blob/master/src/main/java/com/hiczp/bilibili/api/BilibiliSecurityHelper.java
+将得到的结果字符串, 用 RSA 公钥加密, 得到密文密码(如果语言标准库输出的是 ByteArray 则进行一次 Base64).
 
 ## 模拟登陆
 我们已经知道了登陆接口, 并且已经知道了所有参数的生成算法, 现在我们就来试一试.
